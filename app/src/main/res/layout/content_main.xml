@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".MainActivity"
+    tools:showIn="@layout/activity_main"
+    >
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/recyclerView"
+        android:padding="4dp"
+        android:scrollbars="vertical"
+        android:background="@android:color/darker_gray"
+        android:layout_marginBottom="100dp"/>
+
+    <EditText
+        android:id="@+id/edittext_insert"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginBottom="25dp"
+        android:layout_marginLeft="15dp"
+        android:inputType="number"
+        />
+
+    <Button
+        android:id="@+id/insert_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Insert"
+        android:layout_alignBottom="@id/edittext_insert"
+        android:layout_toEndOf="@+id/edittext_insert"
+        android:layout_toRightOf="@+id/edittext_insert" />
+    
+    <EditText
+        android:id="@+id/edittext_remove"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="65dp"
+        android:inputType="number"
+        android:layout_alignBottom="@+id/insert_button"
+        android:layout_toEndOf="@id/insert_button"
+        android:layout_toRightOf="@id/insert_button"
+        android:layout_marginLeft="65dp" />
+
+    <Button
+        android:id="@+id/remove_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/edittext_remove"
+        android:layout_toEndOf="@+id/edittext_remove"
+        android:layout_toRightOf="@+id/edittext_remove"
+        android:text="Remove"/>
+
+</RelativeLayout>
