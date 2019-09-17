@@ -19,9 +19,13 @@ import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final int NOTE_ACTIVITY_REQUEST_CODE = 0;
 
     private Button removeNoteBtn;
     private Button insertNoteBtn;
@@ -29,61 +33,48 @@ public class MainActivity extends AppCompatActivity {
     private EditText insertEditText;
     private EditText removeEditText;
 
+    private FloatingActionButton fab;
+
+    private final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
 
     private ArrayList<Note> notes;
-    private long timestamp;
 
     private RecyclerView recyclerView;
     private NoteAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
-
-    private String timestampToString;
-
-    private String savedTitle;
-    private String savedContent;
-    private String savedTimestamp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        insertEditText = findViewById(R.id.activity_main_insert_edit_text);
+        removeEditText = findViewById(R.id.activity_main_remove_edit_text);
+        insertNoteBtn = findViewById(R.id.activity_main_insert_button);
+        removeNoteBtn = findViewById(R.id.activity_main_remove_button);
+
+        fab = findViewById(R.id.fab);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        timestampToString = dateFormat.format(new Date());
-
-        Intent intent = getIntent();
-
-        if (intent != null) {
-            savedTitle = intent.getStringExtra("title");
-            savedContent = intent.getStringExtra("content");
-            savedTimestamp = intent.getStringExtra("timestamp");
-
-
-            int position = ;
-            changeItem(notes.get(0).setTitle(savedTitle));
-        }
-
         createNoteList();
         setupRecyclerView();
-        setButtons();
-
+        setupButtons();
     }
 
+    private String getDateTime() {
+        Date c = Calendar.getInstance().getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+        return sdf.format(c);
+    }
 
-    public void setButtons() {
-        removeNoteBtn = findViewById(R.id.remove_button);
-        insertNoteBtn = findViewById(R.id.insert_button);
-        insertEditText = findViewById(R.id.edittext_insert);
-        removeEditText = findViewById(R.id.edittext_remove);
-
+    public void setupButtons() {
         insertNoteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int position = Integer.parseInt(insertEditText.getText().toString());
-                insertItem(position);
+                insertItemInList(position);
             }
         });
 
@@ -91,45 +82,35 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 int position = Integer.parseInt(removeEditText.getText().toString());
-                removeItem(position);
+                removeNoteFromList(position);
             }
         });
 
-
-        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                insertItem(0);
-                Intent intent = new Intent(getApplicationContext(), NoteActivity.class);
-                startActivity(intent);
+                insertItemInList(0);
             }
         });
     }
 
-    public void insertItem(int position) {
-        notes.add(position, new Note("Example title", "Example desc", timestampToString));
+    public void insertItemInList(int position) {
+        notes.add(position, new Note("Example title", "Example content", getDateTime()));
         adapter.notifyItemInserted(position);
     }
 
-    public void insertNoteItem(int position, Note note) {
-        notes.add(position, new Note(note.getTitle(), note.getContent(), note.getTimeStampToString()));
-        adapter.notifyItemInserted(position);
-    }
-
-    public void removeItem(int position) {
+    public void removeNoteFromList(int position) {
         notes.remove(position);
         adapter.notifyItemRemoved(position);
     }
 
     private void createNoteList() {
         notes = new ArrayList<>();
-
-        //notes.add(new Note("Ruokalista", "Mehuu, ruokaa", timestampToString));
-
-//        notes.add(new Note("Velkalista", "Mäsks: 20€", timestampToString));
-//        notes.add(new Note("Yoyoyoyo", "ohohoho", timestampToString));
+        notes.add(new Note("Untitled", "untitled", getDateTime()));
+        notes.add(new Note("Example title", "example", getDateTime()));
+        notes.add(new Note("Khiel", "qwerty", getDateTime()));
     }
+
 
     private void setupRecyclerView() {
         recyclerView = findViewById(R.id.recyclerView);
@@ -139,23 +120,21 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
-        adapter.setOnItemClickListener(new NoteAdapter.OnItemClickListener() {
+        adapter.setOnItemClickListener(new NoteAdapter.OnNoteClickListener() {
             @Override
-            public void onItemClicked(int position) {
-                Note note = notes.get(position);
-                changeItem(position, note.getTitle(), note.getContent(), note.getTimeStampToString());
+            public void onNoteClicked(int position) {
+//                changeItem(position, "Clicked");
                 Intent intent = new Intent(getApplicationContext(), NoteActivity.class);
+                intent.putExtra("note_example", notes.get(position));
                 startActivity(intent);
-
             }
 
             @Override
-            public void onDeleteClick(int position) {
-                removeItem(position);
+            public void onNoteRemoved(int position) {
+                removeNoteFromList(position);
                 Toast.makeText(getApplicationContext(), "Note removed", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     @Override
@@ -165,22 +144,10 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public void changeItem(int position, String title, String content, String timestamp) {
-        Note n = notes.get(position);
+    public void changeItem(int position, String text) {
+        notes.get(position).changeTitle(text);
 
-        n.changeTitle(title);
-        n.changeContent(content);
-        n.changeTimestamp(timestamp);
         adapter.notifyItemChanged(position);
-    }
-
-    public Note getUpdatedNoteObject(int position, String title, String content, String timestamp) {
-        Note note = notes.get(position);
-        note.changeTitle(title);
-        note.changeContent(content);
-        note.changeTimestamp(timestamp);
-
-        return note;
     }
 
     public String create(String fileName) {

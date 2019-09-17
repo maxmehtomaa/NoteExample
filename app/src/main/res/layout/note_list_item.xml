@@ -35,19 +35,19 @@
             />
 
         <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_gravity="end"
             app:srcCompat="@drawable/ic_delete"
-            android:id="@+id/note_list_item_image_view_remove"/>
+            android:id="@+id/note_list_item_remove_image_view"
+            android:contentDescription="@string/remove_image" />
 
         <TextView
-            android:id="@+id/note_list_item_text_view_timestamp"
+            android:id="@+id/note_list_item_date_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="(Timestamp)"
+            tools:text="(Date)"
             android:layout_gravity="end"/>
-        
 
     </LinearLayout>
 

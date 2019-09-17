@@ -4,26 +4,30 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class NoteActivity extends AppCompatActivity {
 
     private EditText titleEditText;
     private EditText contentEditText;
+    private Button saveNoteBtn;
+    private Button clearNoteBtn;
 
-    private Button saveNote;
-    private Button removeNote;
-    private String timestampToString;
+    private final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.US);
+
+
+
 
     public interface OnSavedClickListener {
-        void onSaved();
+        void onSaved(String title, String content, String timestamp);
         void onFailed();
     }
 
@@ -32,43 +36,43 @@ public class NoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
 
-        titleEditText = findViewById(R.id.activity_note_edittext_title);
-        contentEditText = findViewById(R.id.activity_note_edittext_content);
-        saveNote = findViewById(R.id.activity_note_save_note_btn);
-        removeNote = findViewById(R.id.activity_note_remove_note_btn);
+        Intent intent = getIntent();
+        Note note = intent.getParcelableExtra("note_example");
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        timestampToString = dateFormat.format(new Date());
+        String title = note.getTitle();
+        String content = note.getContent();
+        String date = note.getDateToString();
 
-        saveNote.setOnClickListener(new View.OnClickListener() {
+        TextView titleView = findViewById(R.id.activity_note_title_text_view);
+        TextView contentView = findViewById(R.id.activity_note_content_text_view);
+        TextView dateView = findViewById(R.id.activity_note_date_text_view);
+
+//        titleEditText = findViewById(R.id.activity_note_title_edit_text);
+//        contentEditText = findViewById(R.id.activity_note_content_edit_text);
+        saveNoteBtn = findViewById(R.id.activity_note_save_button);
+        clearNoteBtn = findViewById(R.id.activity_note_clear_button);
+
+        setupButtons();
+    }
+
+    private String getDateTime() {
+        Date c = Calendar.getInstance().getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+        return sdf.format(c);
+    }
+
+    private void setupButtons() {
+        clearNoteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                if (TextUtils.isEmpty(titleEditText.getText().toString())) {
-                    Toast.makeText(getApplicationContext(), "Title is missing!", Toast.LENGTH_SHORT).show();
-                } else {
-                    String title = titleEditText.getText().toString();
-                    String content = contentEditText.getText().toString();
-
-                    Note note = createNote(title, content, timestampToString);
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    intent.putExtra("title", note.getTitle());
-                    intent.putExtra("content", note.getContent());
-                    intent.putExtra("timestamp", note.getTimeStampToString());
-                    startActivity(intent);
-                }
+            public void onClick(View view) {
+                clearNote();
             }
         });
     }
 
-    public Note createNote(String title, String content, String timestamp) {
-        Note note = new Note(title, content, timestamp);
-
-        return note;
+    public void clearNote() {
+        titleEditText.getText().clear();
+        contentEditText.getText().clear();
     }
 
-    public void updateNote(Note note) {
-        note.changeTitle(note.getTitle());
-        note.changeContent(note.getContent());
-        note.changeTimestamp(note.getTimeStampToString());
-    }
 }

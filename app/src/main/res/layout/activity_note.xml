@@ -7,30 +7,56 @@
     tools:context=".NoteActivity"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/activity_note_edittext_title"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Title"/>
+        android:id="@+id/activity_note_title_text_view"
+        tools:text="(Title)"
+        android:textSize="25sp"
+        android:gravity="center"/>
 
-    <EditText
-        android:id="@+id/activity_note_edittext_content"
+
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Content"
-        android:lines="8"
-        android:layout_marginTop="50dp"/>
+        android:id="@+id/activity_note_content_text_view"
+        tools:text="(Content)"
+        android:textSize="20sp"
+        android:gravity="center"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/activity_note_date_text_view"
+        tools:text="(Date)"
+        android:textSize="15sp"
+        android:gravity="center"/>
+
+
+    <!--<EditText-->
+        <!--android:id="@+id/activity_note_title_edit_text"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:hint="@string/title"/>-->
+
+    <!--<EditText-->
+        <!--android:id="@+id/activity_note_content_edit_text"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:hint="@string/content"-->
+        <!--android:lines="8"-->
+        <!--android:layout_marginTop="50dp"/>-->
 
     <Button
-        android:id="@+id/activity_note_save_note_btn"
-        android:text="Save"
+        android:id="@+id/activity_note_save_button"
+        android:text="@string/save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />
 
     <Button
-        android:text="Remove"
-        android:id="@+id/activity_note_remove_note_btn"
+        android:text="@string/remove"
+        android:id="@+id/activity_note_clear_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

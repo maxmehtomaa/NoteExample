@@ -19,7 +19,7 @@
         android:layout_marginBottom="100dp"/>
 
     <EditText
-        android:id="@+id/edittext_insert"
+        android:id="@+id/activity_main_insert_edit_text"
         android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -32,32 +32,32 @@
         />
 
     <Button
-        android:id="@+id/insert_button"
+        android:id="@+id/activity_main_insert_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Insert"
-        android:layout_alignBottom="@id/edittext_insert"
-        android:layout_toEndOf="@+id/edittext_insert"
-        android:layout_toRightOf="@+id/edittext_insert" />
+        android:text="@string/insert"
+        android:layout_alignBottom="@id/activity_main_insert_edit_text"
+        android:layout_toEndOf="@+id/activity_main_insert_edit_text"
+        android:layout_toRightOf="@+id/activity_main_insert_edit_text" />
     
     <EditText
-        android:id="@+id/edittext_remove"
+        android:id="@+id/activity_main_remove_edit_text"
         android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="65dp"
         android:inputType="number"
-        android:layout_alignBottom="@+id/insert_button"
-        android:layout_toEndOf="@id/insert_button"
-        android:layout_toRightOf="@id/insert_button"
+        android:layout_alignBottom="@+id/activity_main_insert_button"
+        android:layout_toEndOf="@id/activity_main_insert_button"
+        android:layout_toRightOf="@id/activity_main_insert_button"
         android:layout_marginLeft="65dp" />
 
     <Button
-        android:id="@+id/remove_button"
+        android:id="@+id/activity_main_remove_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/edittext_remove"
-        android:layout_toEndOf="@+id/edittext_remove"
-        android:layout_toRightOf="@+id/edittext_remove"
-        android:text="Remove"/>
+        android:layout_alignBottom="@+id/activity_main_remove_edit_text"
+        android:layout_toEndOf="@+id/activity_main_remove_edit_text"
+        android:layout_toRightOf="@+id/activity_main_remove_edit_text"
+        android:text="@string/remove"/>
 
 </RelativeLayout>

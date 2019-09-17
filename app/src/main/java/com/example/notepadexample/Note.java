@@ -1,25 +1,44 @@
 package com.example.notepadexample;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Note implements Serializable {
+public class Note implements Parcelable {
 
     private String title;
     private String content;
-    private String timeStampToString;
+    private String date;
 
-    public Note(String noteTitle, String noteContent, String noteTimestamp) {
+    public Note(String noteTitle, String noteContent, String date) {
         this.title = noteTitle;
         this.content = noteContent;
-        this.timeStampToString = noteTimestamp;
+        this.date = date;
     }
+
+    protected Note(Parcel in) {
+        title = in.readString();
+        content = in.readString();
+        date = in.readString();
+    }
+
+    public static final Creator<Note> CREATOR = new Creator<Note>() {
+        @Override
+        public Note createFromParcel(Parcel in) {
+            return new Note(in);
+        }
+
+        @Override
+        public Note[] newArray(int size) {
+            return new Note[size];
+        }
+    };
 
     public void changeTitle(String text) {
         title = text;
     }
 
     public void changeTimestamp(String text) {
-        timeStampToString = text;
+        date = text;
     }
 
     public void changeContent(String text) {
@@ -42,13 +61,23 @@ public class Note implements Serializable {
         this.content = content;
     }
 
-    public String getTimeStampToString() {
-        return timeStampToString;
+    public String getDateToString() {
+        return date;
     }
 
-    public void setTimeStampToString(String timeStampToString) {
-        this.timeStampToString = timeStampToString;
+    public void setDateToString(String timeStampToString) {
+        this.date = timeStampToString;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(title);
+        parcel.writeString(content);
+        parcel.writeString(date);
+    }
 }

@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">Notepad Example</string>
     <string name="action_settings">Settings</string>
+    <string name="remove">Remove</string>
+    <string name="insert">Insert</string>
+    <string name="title">Title</string>
+    <string name="content">Content</string>
+    <string name="save">Save</string>
+    <string name="clear">Clear</string>
+    <string name="remove_image">Remove image</string>
 </resources>
