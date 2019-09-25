@@ -1,15 +1,20 @@
-package com.example.notepadexample;
+package com.example.notepadexample.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.notepadexample.model.Note;
+import com.example.notepadexample.R;
+import com.example.notepadexample.adapter.NoteAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,9 +28,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class NoteListActivity extends AppCompatActivity {
 
     private static final int NOTE_ACTIVITY_REQUEST_CODE = 0;
+    private static final int NEW_NOTE_POSITION = 0;
+    private static final String TAG = ".NoteListActivity";
 
     private Button removeNoteBtn;
     private Button insertNoteBtn;
@@ -34,8 +41,6 @@ public class MainActivity extends AppCompatActivity {
     private EditText removeEditText;
 
     private FloatingActionButton fab;
-
-    private final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
 
     private ArrayList<Note> notes;
 
@@ -61,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
         createNoteList();
         setupRecyclerView();
         setupButtons();
+
+
     }
 
     private String getDateTime() {
@@ -74,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 int position = Integer.parseInt(insertEditText.getText().toString());
-                insertItemInList(position);
+                insertNoteInList(position);
             }
         });
 
@@ -89,13 +96,13 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                insertItemInList(0);
+                insertNoteInList(NEW_NOTE_POSITION);
             }
         });
     }
 
-    public void insertItemInList(int position) {
-        notes.add(position, new Note("Example title", "Example content", getDateTime()));
+    public void insertNoteInList(int position) {
+        notes.add(position, new Note("Example returnTitle", "Example returnContent", getDateTime()));
         adapter.notifyItemInserted(position);
     }
 
@@ -107,10 +114,9 @@ public class MainActivity extends AppCompatActivity {
     private void createNoteList() {
         notes = new ArrayList<>();
         notes.add(new Note("Untitled", "untitled", getDateTime()));
-        notes.add(new Note("Example title", "example", getDateTime()));
+        notes.add(new Note("Example returnTitle", "example", getDateTime()));
         notes.add(new Note("Khiel", "qwerty", getDateTime()));
     }
-
 
     private void setupRecyclerView() {
         recyclerView = findViewById(R.id.recyclerView);
@@ -123,10 +129,11 @@ public class MainActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new NoteAdapter.OnNoteClickListener() {
             @Override
             public void onNoteClicked(int position) {
-//                changeItem(position, "Clicked");
+//                changeNote(position, "Clicked");
                 Intent intent = new Intent(getApplicationContext(), NoteActivity.class);
                 intent.putExtra("note_example", notes.get(position));
-                startActivity(intent);
+//                startActivity(intent);
+                startActivityForResult(intent, NOTE_ACTIVITY_REQUEST_CODE);
             }
 
             @Override
@@ -134,7 +141,32 @@ public class MainActivity extends AppCompatActivity {
                 removeNoteFromList(position);
                 Toast.makeText(getApplicationContext(), "Note removed", Toast.LENGTH_SHORT).show();
             }
+
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == NOTE_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                if (data != null) {
+                    Note resultNote = data.getParcelableExtra("resultNote");
+                    Log.i(TAG, "onActivityResult: " + resultNote.getTitle());
+                    Log.i(TAG, "onActivityResult: " + resultNote.getContent());
+                    Log.i(TAG, "onActivityResult: " + resultNote.getDateToString());
+
+                    String resultTitle = resultNote.getTitle();
+                    String resultContent = resultNote.getContent();
+                    String resultLastEdit = resultNote.getDateToString();
+
+                    changeNoteTitle(0, resultTitle);
+                    changeNoteContent(0, resultContent);
+                    changeNoteEditDate(0, resultLastEdit);
+
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -144,8 +176,26 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public void changeItem(int position, String text) {
+    public void changeNote(int position, String text) {
         notes.get(position).changeTitle(text);
+
+        adapter.notifyItemChanged(position);
+    }
+
+    public void changeNoteTitle(int position, String text) {
+        notes.get(position).changeTitle(text);
+
+        adapter.notifyItemChanged(position);
+    }
+
+    public void changeNoteContent(int position, String text) {
+        notes.get(position).changeContent(text);
+
+        adapter.notifyItemChanged(position);
+    }
+
+    public void changeNoteEditDate(int position, String text) {
+        notes.get(position).changeTimestamp(text);
 
         adapter.notifyItemChanged(position);
     }
@@ -169,7 +219,6 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

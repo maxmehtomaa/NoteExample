@@ -1,4 +1,4 @@
-package com.example.notepadexample;
+package com.example.notepadexample.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +8,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.notepadexample.model.Note;
+import com.example.notepadexample.R;
 
 import java.util.ArrayList;
 
@@ -19,6 +22,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
     public interface OnNoteClickListener {
         void onNoteClicked(int position);
         void onNoteRemoved(int position);
+
     }
 
     public void setOnItemClickListener(OnNoteClickListener onNoteClickListener) {
@@ -44,7 +48,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
         holder.titleTextView.setText(currentNote.getTitle());
         holder.contentTextView.setText(currentNote.getContent());
-        holder.timestampTextView.setText(currentNote.getDateToString());
+        holder.dateTextView.setText(currentNote.getDateToString());
     }
 
     @Override
@@ -56,15 +60,15 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
         private TextView titleTextView;
         private TextView contentTextView;
-        private TextView timestampTextView;
+        private TextView dateTextView;
         private ImageView removeImageView;
 
         public NoteViewHolder(@NonNull View itemView, final OnNoteClickListener listener) {
             super(itemView);
 
-            titleTextView = itemView.findViewById(R.id.note_list_item_text_view_title);
-            contentTextView = itemView.findViewById(R.id.note_list_item_text_view_content);
-            timestampTextView = itemView.findViewById(R.id.note_list_item_date_text_view);
+            titleTextView = itemView.findViewById(R.id.note_list_item_title_text_view);
+            contentTextView = itemView.findViewById(R.id.note_list_item_content_text_view);
+            dateTextView = itemView.findViewById(R.id.note_list_item_date_text_view);
             removeImageView = itemView.findViewById(R.id.note_list_item_remove_image_view);
 
             removeImageView.setOnClickListener(new View.OnClickListener() {

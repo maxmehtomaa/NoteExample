@@ -1,4 +1,4 @@
-package com.example.notepadexample;
+package com.example.notepadexample.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -65,8 +65,8 @@ public class Note implements Parcelable {
         return date;
     }
 
-    public void setDateToString(String timeStampToString) {
-        this.date = timeStampToString;
+    public void setDateToString(String date) {
+        this.date = date;
     }
 
     @Override

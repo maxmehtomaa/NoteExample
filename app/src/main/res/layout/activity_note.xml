@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NoteActivity"
+    tools:context=".activities.NoteActivity"
     android:orientation="vertical">
 
     <TextView
@@ -33,29 +33,37 @@
         android:gravity="center"/>
 
 
-    <!--<EditText-->
-        <!--android:id="@+id/activity_note_title_edit_text"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:hint="@string/title"/>-->
+    <EditText
+        android:id="@+id/activity_note_title_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/title"
+        android:layout_marginBottom="100dp"
+        android:layout_marginTop="100dp"
+        android:maxLines="1"
+        android:inputType="text"
+        />
 
-    <!--<EditText-->
-        <!--android:id="@+id/activity_note_content_edit_text"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:hint="@string/content"-->
-        <!--android:lines="8"-->
-        <!--android:layout_marginTop="50dp"/>-->
+    <EditText
+        android:id="@+id/activity_note_content_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/content"
+        android:layout_marginBottom="80dp"
+        android:lines="8"
+        android:scrollbars="vertical"
+        android:inputType="textMultiLine"
+        />
 
     <Button
-        android:id="@+id/activity_note_save_button"
+        android:id="@+id/activity_note_edit_button"
         android:text="@string/save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />
 
     <Button
-        android:text="@string/remove"
+        android:text="@string/clear"
         android:id="@+id/activity_note_clear_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
