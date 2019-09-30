@@ -32,16 +32,16 @@ public class NoteActivity extends AppCompatActivity {
 
     private EditText titleEditText;
     private EditText contentEditText;
-    private Button editNoteBtn;
     private TextView titleView;
     private TextView contentView;
     private TextView lastEditDateView;
 
-    private String currentContent;
     private String currentTitle;
+    private String currentContent;
     private String lastEditTime;
 
-    private Note n;
+    private int notePosition;
+    private static final String LAST_EDIT = "Last edit: ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,50 +49,24 @@ public class NoteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_note);
 
         Intent intent = getIntent();
-        Note note = intent.getParcelableExtra("note_example");
+        if (intent != null) {
+            Note note = intent.getParcelableExtra("note_example");
+            notePosition = intent.getIntExtra("position", 0);
 
-        currentTitle = note.getTitle();
-        currentContent = note.getContent();
-        lastEditTime = note.getDateToString();
+            Log.i(TAG, "Title: " + note.getTitle());
+            Log.i(TAG, "Content: " + note.getContent());
+            Log.i(TAG, "Last edit time: " + note.getDateToString());
+
+            currentTitle = note.getTitle();
+            currentContent = note.getContent();
+            lastEditTime = note.getDateToString();
+        }
 
         titleView = findViewById(R.id.activity_note_title_text_view);
         contentView = findViewById(R.id.activity_note_content_text_view);
         lastEditDateView = findViewById(R.id.activity_note_date_text_view);
         titleEditText = findViewById(R.id.activity_note_title_edit_text);
         contentEditText = findViewById(R.id.activity_note_content_edit_text);
-        editNoteBtn = findViewById(R.id.activity_note_edit_button);
-
-//        titleEditText.addTextChangedListener(new TextViewListener() {
-//            @Override
-//            protected void onTextChanged(String before, String old, String aNew, String after) {
-//                String completeOldText = before + old + after;
-//                String completeNewText = before + aNew + after;
-//
-//                startUpdates();
-//                returnedNote.setTitle(completeNewText);
-//                titleEditText.setText(completeNewText);
-//                endUpdates();
-//
-//            }
-//        });
-//
-//        contentEditText.addTextChangedListener(new TextViewListener() {
-//            @Override
-//            protected void onTextChanged(String before, String old, String aNew, String after) {
-//                String completeOldText = before + old + after;
-//                String completeNewText = before + aNew + after;
-//
-//                startUpdates();
-//                returnedNote.setTitle(completeNewText);
-//                contentEditText.setText(completeNewText);
-//                endUpdates();
-//
-//            }
-//        });
-
-        Log.i(TAG, "Title: " + currentTitle);
-        Log.i(TAG, "Content: " + currentContent);
-        Log.i(TAG, "Last edit time: " + lastEditTime);
 
         initTextViews();
         setupButtons();
@@ -101,27 +75,13 @@ public class NoteActivity extends AppCompatActivity {
     private void initTextViews() {
         titleView.setText(currentTitle);
         contentView.setText(currentContent);
-        lastEditDateView.setText("Last edit: " + lastEditTime);
+        lastEditDateView.setText(LAST_EDIT + lastEditTime);
         titleEditText.setText(currentTitle);
-        contentEditText.setText(currentTitle);
-    }
-
-
-    private String getDateTime() {
-        Date c = Calendar.getInstance().getTime();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm:ss", Locale.getDefault());
-        return sdf.format(c);
+        contentEditText.setText(currentContent);
     }
 
     private void setupButtons() {
-        editNoteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String title = titleEditText.getText().toString();
-                String content = contentEditText.getText().toString();
-                editNote(title, content, getDateTime());
-            }
-        });
+
     }
 
     @Override
@@ -156,7 +116,8 @@ public class NoteActivity extends AppCompatActivity {
 
         resultIntent.putExtra("resultNote", resultNote);
         setResult(RESULT_OK, resultIntent);
-        finish();
+        Toast.makeText(getApplicationContext(), "Note has been saved", Toast.LENGTH_SHORT).show();
+//        finish();
     }
 
     private void editNote(String title, String content, String date) {
@@ -174,6 +135,31 @@ public class NoteActivity extends AppCompatActivity {
     private void clearTextFields() {
         titleEditText.getText().clear();
         contentEditText.getText().clear();
+        titleView.setText("Empty");
+        contentView.setText("Empty");
+        lastEditDateView.setText(LAST_EDIT + getDateTime());
         Toast.makeText(this, "Cleared text fields", Toast.LENGTH_SHORT).show();
+    }
+
+    private String getDateTime() {
+        Date c = Calendar.getInstance().getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm:ss", Locale.getDefault());
+        return sdf.format(c);
+    }
+
+    @Override
+    public void onBackPressed() {
+        String title = titleEditText.getText().toString();
+        String content = contentEditText.getText().toString();
+        String lastEdit = getDateTime();
+
+        Note resultNote = new Note(title, content, lastEdit);
+        editNote(title, content, lastEdit);
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("resultNote", resultNote);
+        resultIntent.putExtra("position", notePosition);
+        setResult(RESULT_OK, resultIntent);
+        Toast.makeText(NoteActivity.this, "Note has been saved", Toast.LENGTH_SHORT).show();
+        finish();
     }
 }

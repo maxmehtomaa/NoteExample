@@ -38,34 +38,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/title"
-        android:layout_marginBottom="100dp"
-        android:layout_marginTop="100dp"
         android:maxLines="1"
         android:inputType="text"
+        android:layout_marginTop="10dp"
         />
 
     <EditText
         android:id="@+id/activity_note_content_edit_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:hint="@string/content"
-        android:layout_marginBottom="80dp"
-        android:lines="8"
-        android:scrollbars="vertical"
-        android:inputType="textMultiLine"
-        />
+        android:gravity="start"
+        android:scrollbars="vertical" />
 
-    <Button
-        android:id="@+id/activity_note_edit_button"
-        android:text="@string/save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
+    <!--<Button-->
+        <!--android:id="@+id/activity_note_edit_button"-->
+        <!--android:text="@string/save"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--/>-->
 
-    <Button
-        android:text="@string/clear"
-        android:id="@+id/activity_note_clear_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <!--<Button-->
+        <!--android:text="@string/clear"-->
+        <!--android:id="@+id/activity_note_clear_button"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content" />-->
 
 </LinearLayout>

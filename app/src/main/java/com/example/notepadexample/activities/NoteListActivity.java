@@ -31,42 +31,44 @@ import java.util.Locale;
 public class NoteListActivity extends AppCompatActivity {
 
     private static final int NOTE_ACTIVITY_REQUEST_CODE = 0;
-    private static final int NEW_NOTE_POSITION = 0;
+
     private static final String TAG = ".NoteListActivity";
 
-    private Button removeNoteBtn;
-    private Button insertNoteBtn;
-
-    private EditText insertEditText;
-    private EditText removeEditText;
+//    private Button removeNoteBtn;
+//    private Button insertNoteBtn;
+//
+//    private EditText insertEditText;
+//    private EditText removeEditText;
 
     private FloatingActionButton fab;
 
     private ArrayList<Note> notes;
 
+    private int NEW_NOTE_POSITION = 0;
+
     private RecyclerView recyclerView;
     private NoteAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
+    private static final String LAST_EDIT = "Last edit: ";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_note_list);
 
-        insertEditText = findViewById(R.id.activity_main_insert_edit_text);
-        removeEditText = findViewById(R.id.activity_main_remove_edit_text);
-        insertNoteBtn = findViewById(R.id.activity_main_insert_button);
-        removeNoteBtn = findViewById(R.id.activity_main_remove_button);
+//        insertEditText = findViewById(R.id.activity_main_insert_edit_text);
+//        removeEditText = findViewById(R.id.activity_main_remove_edit_text);
+//        insertNoteBtn = findViewById(R.id.activity_main_insert_button);
+//        removeNoteBtn = findViewById(R.id.activity_main_remove_button);
 
         fab = findViewById(R.id.fab);
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         createNoteList();
         setupRecyclerView();
         setupButtons();
-
 
     }
 
@@ -77,32 +79,36 @@ public class NoteListActivity extends AppCompatActivity {
     }
 
     public void setupButtons() {
-        insertNoteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = Integer.parseInt(insertEditText.getText().toString());
-                insertNoteInList(position);
-            }
-        });
-
-        removeNoteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = Integer.parseInt(removeEditText.getText().toString());
-                removeNoteFromList(position);
-            }
-        });
+//        insertNoteBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                int position = Integer.parseInt(insertEditText.getText().toString());
+//                insertNoteInList(position);
+//            }
+//        });
+//
+//        removeNoteBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                int position = Integer.parseInt(removeEditText.getText().toString());
+//                removeNoteFromList(position);
+//            }
+//        });
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                insertNoteInList(NEW_NOTE_POSITION);
+                insertNoteInList(getLastItemPositionInList());
             }
         });
     }
 
+    private int getLastItemPositionInList() {
+        return notes.size() - 1;
+    }
+
     public void insertNoteInList(int position) {
-        notes.add(position, new Note("Example returnTitle", "Example returnContent", getDateTime()));
+        notes.add(position, new Note("Untitled", "Example content", getDateTime()));
         adapter.notifyItemInserted(position);
     }
 
@@ -113,9 +119,9 @@ public class NoteListActivity extends AppCompatActivity {
 
     private void createNoteList() {
         notes = new ArrayList<>();
-        notes.add(new Note("Untitled", "untitled", getDateTime()));
-        notes.add(new Note("Example returnTitle", "example", getDateTime()));
-        notes.add(new Note("Khiel", "qwerty", getDateTime()));
+        notes.add(new Note("Untitled", "untitled", LAST_EDIT + getDateTime()));
+        notes.add(new Note("Example title", "example", LAST_EDIT + getDateTime()));
+        notes.add(new Note("Khiel", "qwerty", LAST_EDIT + getDateTime()));
     }
 
     private void setupRecyclerView() {
@@ -132,6 +138,7 @@ public class NoteListActivity extends AppCompatActivity {
 //                changeNote(position, "Clicked");
                 Intent intent = new Intent(getApplicationContext(), NoteActivity.class);
                 intent.putExtra("note_example", notes.get(position));
+                intent.putExtra("position", position);
 //                startActivity(intent);
                 startActivityForResult(intent, NOTE_ACTIVITY_REQUEST_CODE);
             }
@@ -150,19 +157,21 @@ public class NoteListActivity extends AppCompatActivity {
         if (requestCode == NOTE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 if (data != null) {
+
                     Note resultNote = data.getParcelableExtra("resultNote");
-                    Log.i(TAG, "onActivityResult: " + resultNote.getTitle());
-                    Log.i(TAG, "onActivityResult: " + resultNote.getContent());
-                    Log.i(TAG, "onActivityResult: " + resultNote.getDateToString());
+                    int position = data.getIntExtra("position", 0);
+                    Log.i(TAG, "Title: " + resultNote.getTitle());
+                    Log.i(TAG, "Content: " + resultNote.getContent());
+                    Log.i(TAG, "Last edit: " + resultNote.getDateToString());
+                    Log.i(TAG, "This note position: " + position);
 
                     String resultTitle = resultNote.getTitle();
                     String resultContent = resultNote.getContent();
                     String resultLastEdit = resultNote.getDateToString();
 
-                    changeNoteTitle(0, resultTitle);
-                    changeNoteContent(0, resultContent);
-                    changeNoteEditDate(0, resultLastEdit);
-
+                    changeNoteTitle(position, resultTitle);
+                    changeNoteContent(position, resultContent);
+                    changeNoteEditDate(position, resultLastEdit);
                 }
             }
         }
@@ -178,7 +187,6 @@ public class NoteListActivity extends AppCompatActivity {
 
     public void changeNote(int position, String text) {
         notes.get(position).changeTitle(text);
-
         adapter.notifyItemChanged(position);
     }
 
