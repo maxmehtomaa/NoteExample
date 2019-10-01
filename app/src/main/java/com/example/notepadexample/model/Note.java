@@ -7,18 +7,18 @@ public class Note implements Parcelable {
 
     private String title;
     private String content;
-    private String date;
+    private String lastEditTime;
 
-    public Note(String noteTitle, String noteContent, String date) {
+    public Note(String noteTitle, String noteContent, String lastEditTime) {
         this.title = noteTitle;
         this.content = noteContent;
-        this.date = date;
+        this.lastEditTime = lastEditTime;
     }
 
     protected Note(Parcel in) {
         title = in.readString();
         content = in.readString();
-        date = in.readString();
+        lastEditTime = in.readString();
     }
 
     public static final Creator<Note> CREATOR = new Creator<Note>() {
@@ -33,16 +33,16 @@ public class Note implements Parcelable {
         }
     };
 
-    public void changeTitle(String text) {
-        title = text;
+    public void changeTitle(String title) {
+        this.title = title;
     }
 
-    public void changeTimestamp(String text) {
-        date = text;
+    public void changeLastEditTime(String lastEditTime) {
+        this.lastEditTime = lastEditTime;
     }
 
-    public void changeContent(String text) {
-        content = text;
+    public void changeContent(String content) {
+        this.content = content;
     }
 
     public String getTitle() {
@@ -61,12 +61,12 @@ public class Note implements Parcelable {
         this.content = content;
     }
 
-    public String getDateToString() {
-        return date;
+    public String getLastEditTime() {
+        return lastEditTime;
     }
 
-    public void setDateToString(String date) {
-        this.date = date;
+    public void setLastEditTime(String lastEditTime) {
+        this.lastEditTime = lastEditTime;
     }
 
     @Override
@@ -78,6 +78,6 @@ public class Note implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(title);
         parcel.writeString(content);
-        parcel.writeString(date);
+        parcel.writeString(lastEditTime);
     }
 }

@@ -13,4 +13,9 @@
         android:id="@+id/action_clear"
         android:title="@string/clear"
         app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_remove"
+        android:title="Remove note"
+        app:showAsAction="never"/>
 </menu>

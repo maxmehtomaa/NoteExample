@@ -16,48 +16,6 @@
         android:padding="4dp"
         android:scrollbars="vertical"
         android:background="@android:color/transparent"
-        android:layout_marginBottom="100dp"/>
-
-    <!--<EditText-->
-        <!--android:id="@+id/activity_main_insert_edit_text"-->
-        <!--android:layout_width="40dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:layout_alignParentStart="true"-->
-        <!--android:layout_alignParentLeft="true"-->
-        <!--android:layout_marginStart="15dp"-->
-        <!--android:layout_marginBottom="25dp"-->
-        <!--android:layout_marginLeft="15dp"-->
-        <!--android:inputType="number"-->
-        <!--/>-->
-
-    <!--<Button-->
-        <!--android:id="@+id/activity_main_insert_button"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="@string/insert"-->
-        <!--android:layout_alignBottom="@id/activity_main_insert_edit_text"-->
-        <!--android:layout_toEndOf="@+id/activity_main_insert_edit_text"-->
-        <!--android:layout_toRightOf="@+id/activity_main_insert_edit_text" />-->
-    <!---->
-    <!--<EditText-->
-        <!--android:id="@+id/activity_main_remove_edit_text"-->
-        <!--android:layout_width="40dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginStart="65dp"-->
-        <!--android:inputType="number"-->
-        <!--android:layout_alignBottom="@+id/activity_main_insert_button"-->
-        <!--android:layout_toEndOf="@id/activity_main_insert_button"-->
-        <!--android:layout_toRightOf="@id/activity_main_insert_button"-->
-        <!--android:layout_marginLeft="65dp" />-->
-
-    <!--<Button-->
-        <!--android:id="@+id/activity_main_remove_button"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignBottom="@+id/activity_main_remove_edit_text"-->
-        <!--android:layout_toEndOf="@+id/activity_main_remove_edit_text"-->
-        <!--android:layout_toRightOf="@+id/activity_main_remove_edit_text"-->
-        <!--android:text="@string/remove"/>-->
+        tools:listitem="@layout/note_list_item"/>
 
 </RelativeLayout>

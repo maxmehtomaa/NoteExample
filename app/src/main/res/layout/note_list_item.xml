@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@android:color/white"
+        android:background="@android:color/darker_gray"
         android:padding="8dp">
 
         <TextView
@@ -23,8 +23,10 @@
             android:layout_height="wrap_content"
             tools:text="(Title)"
             android:textStyle="bold"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:maxLines="1"
-            android:textSize="15sp"
+            android:ellipsize="end"
+            android:textSize="20sp"
             />
 
         <TextView
@@ -44,7 +46,6 @@
             android:layout_height="wrap_content"
             tools:text="(Date)"
             android:maxLines="1"
-            android:layout_marginTop="10dp"
             />
 
         <ImageView
@@ -52,7 +53,6 @@
             android:layout_height="40dp"
             android:layout_gravity="end"
             app:srcCompat="@drawable/ic_delete"
-            android:layout_marginBottom="25dp"
             android:id="@+id/note_list_item_remove_image_view"
             android:contentDescription="@string/remove_image" />
 

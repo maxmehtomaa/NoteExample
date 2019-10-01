@@ -21,8 +21,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
     public interface OnNoteClickListener {
         void onNoteClicked(int position);
-        void onNoteRemoved(int position);
 
+        void onNoteRemoved(int position);
     }
 
     public void setOnItemClickListener(OnNoteClickListener onNoteClickListener) {
@@ -36,10 +36,9 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
     @NonNull
     @Override
     public NoteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.note_list_item, parent, false);
-        NoteViewHolder viewHolder = new NoteViewHolder(v, listener);
-
-        return viewHolder;
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.note_list_item, parent, false);
+        return new NoteViewHolder(v, listener);
     }
 
     @Override
@@ -48,12 +47,16 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
         holder.titleTextView.setText(currentNote.getTitle());
         holder.contentTextView.setText(currentNote.getContent());
-        holder.dateTextView.setText(currentNote.getDateToString());
+        holder.dateTextView.setText(currentNote.getLastEditTime());
     }
 
     @Override
     public int getItemCount() {
         return noteArrayList.size();
+    }
+
+    public Note getNoteAt(int position) {
+        return noteArrayList.get(position);
     }
 
     public static class NoteViewHolder extends RecyclerView.ViewHolder {
@@ -74,11 +77,9 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
             removeImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (listener != null) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            listener.onNoteRemoved(position);
-                        }
+                    int position = getAdapterPosition();
+                    if (listener != null && position != RecyclerView.NO_POSITION) {
+                        listener.onNoteRemoved(position);
                     }
                 }
             });
@@ -86,11 +87,9 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (listener != null) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            listener.onNoteClicked(position);
-                        }
+                    int position = getAdapterPosition();
+                    if (listener != null && position != RecyclerView.NO_POSITION) {
+                        listener.onNoteClicked(position);
                     }
                 }
             });

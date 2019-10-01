@@ -2,15 +2,13 @@ package com.example.notepadexample.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,17 +16,22 @@ import android.widget.Toast;
 import com.example.notepadexample.model.Note;
 import com.example.notepadexample.R;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+
 public class NoteActivity extends AppCompatActivity {
 
     private static final String TAG = ".NoteActivity";
+
+    public static final String EXTRA_TITLE = "com.example.notepadexample.EXTRA_TITLE";
+    public static final String EXTRA_CONTENT = "com.example.notepadexample.EXTRA_CONTENT";
+
+    public static final String EXTRA_POSITION = "com.example.notepadexample.EXTRA_POSITION";
+    public static final String EXTRA_NOTE = "com.example.notepadexample.EXTRA_NOTE";
+
 
     private EditText titleEditText;
     private EditText contentEditText;
@@ -40,7 +43,7 @@ public class NoteActivity extends AppCompatActivity {
     private String currentContent;
     private String lastEditTime;
 
-    private int notePosition;
+    private int notePositionInList;
     private static final String LAST_EDIT = "Last edit: ";
 
     @Override
@@ -48,19 +51,7 @@ public class NoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
 
-        Intent intent = getIntent();
-        if (intent != null) {
-            Note note = intent.getParcelableExtra("note_example");
-            notePosition = intent.getIntExtra("position", 0);
-
-            Log.i(TAG, "Title: " + note.getTitle());
-            Log.i(TAG, "Content: " + note.getContent());
-            Log.i(TAG, "Last edit time: " + note.getDateToString());
-
-            currentTitle = note.getTitle();
-            currentContent = note.getContent();
-            lastEditTime = note.getDateToString();
-        }
+        setTitle("Edit Note");
 
         titleView = findViewById(R.id.activity_note_title_text_view);
         contentView = findViewById(R.id.activity_note_content_text_view);
@@ -68,25 +59,44 @@ public class NoteActivity extends AppCompatActivity {
         titleEditText = findViewById(R.id.activity_note_title_edit_text);
         contentEditText = findViewById(R.id.activity_note_content_edit_text);
 
+        Intent intent = getIntent();
+
+        if (intent != null) {
+            Note note = intent.getParcelableExtra(EXTRA_NOTE);
+            notePositionInList = intent.getIntExtra(EXTRA_POSITION, 0);
+
+            currentTitle = note.getTitle();
+            currentContent = note.getContent();
+            lastEditTime = note.getLastEditTime();
+
+            Log.i(TAG, "Title: " + currentTitle);
+            Log.i(TAG, "Content: " + currentContent);
+            Log.i(TAG, "Last edit time: " + lastEditTime);
+        } else {
+            Toast.makeText(this, "Intent is null", Toast.LENGTH_SHORT).show();
+        }
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_cancel);
         initTextViews();
-        setupButtons();
+//        setupButtons();
     }
 
     private void initTextViews() {
         titleView.setText(currentTitle);
         contentView.setText(currentContent);
-        lastEditDateView.setText(LAST_EDIT + lastEditTime);
+        lastEditDateView.setText(lastEditTime);
+
         titleEditText.setText(currentTitle);
         contentEditText.setText(currentContent);
     }
 
-    private void setupButtons() {
-
-    }
+//    private void setupButtons() {
+//
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_note, menu);
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_note, menu);
         return true;
     }
 
@@ -95,15 +105,15 @@ public class NoteActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_save:
                 saveNote();
-                break;
+                return true;
             case R.id.action_clear:
-                clearTextFields();
-                break;
+                clearNoteData();
+                return true;
+            case R.id.action_remove:
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private void saveNote() {
@@ -111,33 +121,39 @@ public class NoteActivity extends AppCompatActivity {
         String content = contentEditText.getText().toString();
         String lastEdit = getDateTime();
 
-        Intent resultIntent = new Intent();
-        Note resultNote = new Note(title, content, lastEdit);
-
-        resultIntent.putExtra("resultNote", resultNote);
-        setResult(RESULT_OK, resultIntent);
-        Toast.makeText(getApplicationContext(), "Note has been saved", Toast.LENGTH_SHORT).show();
-//        finish();
-    }
-
-    private void editNote(String title, String content, String date) {
-        if (TextUtils.isEmpty(title) || TextUtils.isEmpty(content)) {
-            Toast.makeText(this, "Title/currentContent is missing", Toast.LENGTH_SHORT).show();
+        if (title.trim().isEmpty() || content.trim().isEmpty()) {
+            Toast.makeText(this, "Please insert a title and content", Toast.LENGTH_SHORT).show();
             return;
         }
+        Intent resultIntent = new Intent();
+        Note resultNote = new Note(title, content, lastEdit);
+        editTextViews(title, content, lastEdit);
 
-        titleView.setText(title);
-        contentView.setText(content);
-        lastEditDateView.setText(date);
-        Toast.makeText(this, "Note has been edited", Toast.LENGTH_SHORT).show();
+        resultIntent.putExtra(EXTRA_NOTE, resultNote);
+        resultIntent.putExtra(EXTRA_POSITION, notePositionInList);
+        setResult(RESULT_OK, resultIntent);
+        Toast.makeText(getApplicationContext(), "Note has been saved", Toast.LENGTH_SHORT).show();
+        finish();
     }
 
-    private void clearTextFields() {
+    private void editTextViews(String title, String content, String lastEdit) {
+        if (TextUtils.isEmpty(title) || TextUtils.isEmpty(content)) {
+            Toast.makeText(this, "Title/content is missing", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        titleView.setText(title);
+        contentView.setText(content);
+        lastEditDateView.setText(lastEdit);
+        Toast.makeText(this, "Text views has been edited", Toast.LENGTH_SHORT).show();
+    }
+
+    private void clearNoteData() {
         titleEditText.getText().clear();
         contentEditText.getText().clear();
-        titleView.setText("Empty");
-        contentView.setText("Empty");
-        lastEditDateView.setText(LAST_EDIT + getDateTime());
+
+        titleView.setText("Untitled");
+        contentView.setText("Content");
+        lastEditDateView.setText(getDateTime());
         Toast.makeText(this, "Cleared text fields", Toast.LENGTH_SHORT).show();
     }
 
@@ -153,11 +169,17 @@ public class NoteActivity extends AppCompatActivity {
         String content = contentEditText.getText().toString();
         String lastEdit = getDateTime();
 
+        if (title.trim().isEmpty() || content.trim().isEmpty()) {
+            Toast.makeText(this, "Please insert a title and content", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Note resultNote = new Note(title, content, lastEdit);
-        editNote(title, content, lastEdit);
+        editTextViews(title, content, lastEdit);
+
         Intent resultIntent = new Intent();
-        resultIntent.putExtra("resultNote", resultNote);
-        resultIntent.putExtra("position", notePosition);
+        resultIntent.putExtra(EXTRA_NOTE, resultNote);
+        resultIntent.putExtra(EXTRA_POSITION, notePositionInList);
         setResult(RESULT_OK, resultIntent);
         Toast.makeText(NoteActivity.this, "Note has been saved", Toast.LENGTH_SHORT).show();
         finish();
