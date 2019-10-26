@@ -37,12 +37,13 @@ public class NoteListActivity extends AppCompatActivity {
 
     private static final int NOTE_ACTIVITY_REQUEST_CODE = 0;
     private static final int EDIT_NOTE_REQUEST_CODE = 1;
+    private static final int NEW_NOTE_POSITION = 0;
 
     private static final String TAG = ".NoteListActivity";
     private static final String LAST_EDIT = "Last edit: ";
+
     private FloatingActionButton fab;
     private ArrayList<Note> notes;
-    private int NEW_NOTE_POSITION = 0;
 
     private RecyclerView recyclerView;
     private NoteAdapter adapter;
@@ -64,48 +65,6 @@ public class NoteListActivity extends AppCompatActivity {
         setupRecyclerView();
         setupButtons();
         setupItemTouchHelper();
-    }
-
-    private void setupItemTouchHelper() {
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SimpleCallback(0,
-                RIGHT | LEFT) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                removeNoteFromList(viewHolder.getAdapterPosition());
-            }
-        });
-
-        itemTouchHelper.attachToRecyclerView(recyclerView);
-    }
-
-    private String getDateTime() {
-        Date c = Calendar.getInstance().getTime();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
-        return sdf.format(c);
-    }
-
-    public void setupButtons() {
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                insertNoteInList(NEW_NOTE_POSITION);
-            }
-        });
-    }
-
-    public void insertNoteInList(int position) {
-        notes.add(position, new Note("Untitled", "Example content", getDateTime()));
-        adapter.notifyItemInserted(position);
-    }
-
-    public void removeNoteFromList(int position) {
-        notes.remove(position);
-        adapter.notifyItemRemoved(position);
     }
 
     private void createNoteList() {
@@ -138,6 +97,48 @@ public class NoteListActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Note removed", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void setupButtons() {
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                insertNoteInList(NEW_NOTE_POSITION);
+            }
+        });
+    }
+
+    private void setupItemTouchHelper() {
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SimpleCallback(0,
+                RIGHT | LEFT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                removeNoteFromList(viewHolder.getAdapterPosition());
+            }
+        });
+
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+    }
+
+    private String getDateTime() {
+        Date c = Calendar.getInstance().getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+        return sdf.format(c);
+    }
+
+    public void insertNoteInList(int position) {
+        notes.add(position, new Note("Untitled", "Example content", getDateTime()));
+        adapter.notifyItemInserted(position);
+    }
+
+    public void removeNoteFromList(int position) {
+        notes.remove(position);
+        adapter.notifyItemRemoved(position);
     }
 
     @Override
@@ -188,10 +189,12 @@ public class NoteListActivity extends AppCompatActivity {
         adapter.notifyItemChanged(position);
     }
 
+    //TODO: Creates a note file
     public String create(String fileName) {
         return null;
     }
 
+    //TODO: Removes a note file
     public String remove(String fileName) {
         return null;
     }

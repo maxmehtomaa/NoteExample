@@ -24,14 +24,16 @@ import java.util.Locale;
 
 public class NoteActivity extends AppCompatActivity {
 
+    public interface OnNoteClickListener {
+        void onRemove(int position);
+    }
+
     private static final String TAG = ".NoteActivity";
 
     public static final String EXTRA_TITLE = "com.example.notepadexample.EXTRA_TITLE";
     public static final String EXTRA_CONTENT = "com.example.notepadexample.EXTRA_CONTENT";
-
     public static final String EXTRA_POSITION = "com.example.notepadexample.EXTRA_POSITION";
     public static final String EXTRA_NOTE = "com.example.notepadexample.EXTRA_NOTE";
-
 
     private EditText titleEditText;
     private EditText contentEditText;
@@ -77,21 +79,15 @@ public class NoteActivity extends AppCompatActivity {
         }
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_cancel);
         initTextViews();
-//        setupButtons();
     }
 
     private void initTextViews() {
         titleView.setText(currentTitle);
         contentView.setText(currentContent);
         lastEditDateView.setText(lastEditTime);
-
         titleEditText.setText(currentTitle);
         contentEditText.setText(currentContent);
     }
-
-//    private void setupButtons() {
-//
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -107,7 +103,7 @@ public class NoteActivity extends AppCompatActivity {
                 saveNote();
                 return true;
             case R.id.action_clear:
-                clearNoteData();
+                clearNote();
                 return true;
             case R.id.action_remove:
                 return true;
@@ -127,13 +123,13 @@ public class NoteActivity extends AppCompatActivity {
         }
         Intent resultIntent = new Intent();
         Note resultNote = new Note(title, content, lastEdit);
-        editTextViews(title, content, lastEdit);
 
         resultIntent.putExtra(EXTRA_NOTE, resultNote);
         resultIntent.putExtra(EXTRA_POSITION, notePositionInList);
         setResult(RESULT_OK, resultIntent);
         Toast.makeText(getApplicationContext(), "Note has been saved", Toast.LENGTH_SHORT).show();
         finish();
+        editTextViews(title, content, lastEdit);
     }
 
     private void editTextViews(String title, String content, String lastEdit) {
@@ -147,7 +143,7 @@ public class NoteActivity extends AppCompatActivity {
         Toast.makeText(this, "Text views has been edited", Toast.LENGTH_SHORT).show();
     }
 
-    private void clearNoteData() {
+    private void clearNote() {
         titleEditText.getText().clear();
         contentEditText.getText().clear();
 
@@ -159,7 +155,7 @@ public class NoteActivity extends AppCompatActivity {
 
     private String getDateTime() {
         Date c = Calendar.getInstance().getTime();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm:ss", Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
         return sdf.format(c);
     }
 

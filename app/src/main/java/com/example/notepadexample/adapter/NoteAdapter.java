@@ -14,6 +14,7 @@ import com.example.notepadexample.R;
 
 import java.util.ArrayList;
 
+//public class NoteAdapter extends ListAdapter<Note, NoteViewHolder> {
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
 
     private ArrayList<Note> noteArrayList;
