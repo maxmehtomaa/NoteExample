@@ -14,24 +14,22 @@ import com.example.notepadexample.R;
 
 import java.util.ArrayList;
 
-//public class NoteAdapter extends ListAdapter<Note, NoteViewHolder> {
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
 
-    private ArrayList<Note> noteArrayList;
+    private ArrayList<Note> noteList;
     private OnNoteClickListener listener;
 
     public interface OnNoteClickListener {
         void onNoteClicked(int position);
-
         void onNoteRemoved(int position);
     }
 
-    public void setOnItemClickListener(OnNoteClickListener onNoteClickListener) {
+    public void setOnNoteClickListener(OnNoteClickListener onNoteClickListener) {
         this.listener = onNoteClickListener;
     }
 
     public NoteAdapter(ArrayList<Note> noteList) {
-        noteArrayList = noteList;
+        this.noteList = noteList;
     }
 
     @NonNull
@@ -44,20 +42,20 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull NoteViewHolder holder, int position) {
-        Note currentNote = noteArrayList.get(position);
+        Note note = noteList.get(position);
 
-        holder.titleTextView.setText(currentNote.getTitle());
-        holder.contentTextView.setText(currentNote.getContent());
-        holder.dateTextView.setText(currentNote.getLastEditTime());
+        holder.titleTextView.setText(note.getTitle());
+        holder.contentTextView.setText(note.getContent());
+        holder.dateTextView.setText(note.getLastEditTime());
     }
 
     @Override
     public int getItemCount() {
-        return noteArrayList.size();
+        return noteList.size();
     }
 
     public Note getNoteAt(int position) {
-        return noteArrayList.get(position);
+        return noteList.get(position);
     }
 
     public static class NoteViewHolder extends RecyclerView.ViewHolder {

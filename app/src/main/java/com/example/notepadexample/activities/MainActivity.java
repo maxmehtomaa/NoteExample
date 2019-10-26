@@ -1,12 +1,15 @@
 package com.example.notepadexample.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.example.notepadexample.model.Note;
 import com.example.notepadexample.R;
 import com.example.notepadexample.adapter.NoteAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,13 +37,14 @@ import static androidx.recyclerview.widget.ItemTouchHelper.*;
 import static com.example.notepadexample.activities.NoteActivity.EXTRA_NOTE;
 import static com.example.notepadexample.activities.NoteActivity.EXTRA_POSITION;
 
-public class NoteListActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     private static final int NOTE_ACTIVITY_REQUEST_CODE = 0;
     private static final int EDIT_NOTE_REQUEST_CODE = 1;
     private static final int NEW_NOTE_POSITION = 0;
+    public static final String FILE_NAME = "example.txt";
 
-    private static final String TAG = ".NoteListActivity";
+    private static final String TAG = ".MainActivity";
 
     private FloatingActionButton fab;
     private ArrayList<Note> notes;
@@ -52,7 +57,7 @@ public class NoteListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_note_list);
+        setContentView(R.layout.activity_main);
         setTitle("Notepad Example");
 
         fab = findViewById(R.id.fab);
@@ -67,11 +72,33 @@ public class NoteListActivity extends AppCompatActivity {
     }
 
     private void createNoteList() {
-        notes = new ArrayList<>();
-        notes.add(new Note("Untitled", "untitled", getDateTime()));
-        notes.add(new Note("Example title", "example", getDateTime()));
-        notes.add(new Note("Khiel", "qwerty", getDateTime()));
+        loadData();
+//        notes.add(new Note("Untitled", "untitled", getDateTime()));
+//        notes.add(new Note("Example title", "example", getDateTime()));
+//        notes.add(new Note("Khiel", "qwerty", getDateTime()));
     }
+
+    private void saveData() {
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(notes);
+        editor.putString("note_list", json);
+        editor.apply();
+    }
+
+    private void loadData() {
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("note_list", null);
+        Type type = new TypeToken<ArrayList<Note>>() {}.getType();
+        notes = gson.fromJson(json, type);
+
+        if (notes == null) {
+            notes = new ArrayList<>();
+        }
+    }
+
 
     private void setupRecyclerView() {
         recyclerView = findViewById(R.id.recyclerView);
@@ -81,7 +108,7 @@ public class NoteListActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
-        adapter.setOnItemClickListener(new NoteAdapter.OnNoteClickListener() {
+        adapter.setOnNoteClickListener(new NoteAdapter.OnNoteClickListener() {
             @Override
             public void onNoteClicked(int position) {
                 Intent intent = new Intent(getApplicationContext(), NoteActivity.class);
@@ -101,7 +128,7 @@ public class NoteListActivity extends AppCompatActivity {
     public void setupButtons() {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 insertNoteInList(NEW_NOTE_POSITION);
             }
         });
@@ -169,7 +196,9 @@ public class NoteListActivity extends AppCompatActivity {
     }
 
     public void changeNote(int position, String text) {
+        Note n = notes.get(position);
         notes.get(position).changeTitle(text);
+
         adapter.notifyItemChanged(position);
     }
 
@@ -189,7 +218,7 @@ public class NoteListActivity extends AppCompatActivity {
     }
 
 
-    public String create(String fileName) {
+    public String create() {
         //TODO: Creates a note file
         return null;
     }
@@ -220,5 +249,11 @@ public class NoteListActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        saveData();
     }
 }

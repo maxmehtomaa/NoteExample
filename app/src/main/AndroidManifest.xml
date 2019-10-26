@@ -13,10 +13,10 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".activities.NoteActivity"
-            android:parentActivityName=".activities.NoteListActivity"
+            android:parentActivityName=".activities.MainActivity"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar"></activity>
         <activity
-            android:name=".activities.NoteListActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
