@@ -40,7 +40,6 @@ public class NoteListActivity extends AppCompatActivity {
     private static final int NEW_NOTE_POSITION = 0;
 
     private static final String TAG = ".NoteListActivity";
-    private static final String LAST_EDIT = "Last edit: ";
 
     private FloatingActionButton fab;
     private ArrayList<Note> notes;
@@ -69,9 +68,9 @@ public class NoteListActivity extends AppCompatActivity {
 
     private void createNoteList() {
         notes = new ArrayList<>();
-        notes.add(new Note("Untitled", "untitled", LAST_EDIT + getDateTime()));
-        notes.add(new Note("Example title", "example", LAST_EDIT + getDateTime()));
-        notes.add(new Note("Khiel", "qwerty", LAST_EDIT + getDateTime()));
+        notes.add(new Note("Untitled", "untitled", getDateTime()));
+        notes.add(new Note("Example title", "example", getDateTime()));
+        notes.add(new Note("Khiel", "qwerty", getDateTime()));
     }
 
     private void setupRecyclerView() {
@@ -189,13 +188,14 @@ public class NoteListActivity extends AppCompatActivity {
         adapter.notifyItemChanged(position);
     }
 
-    //TODO: Creates a note file
+
     public String create(String fileName) {
+        //TODO: Creates a note file
         return null;
     }
 
-    //TODO: Removes a note file
     public String remove(String fileName) {
+        //TODO: Removes a note file
         return null;
     }
 

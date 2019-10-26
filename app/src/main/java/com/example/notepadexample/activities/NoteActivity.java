@@ -45,7 +45,7 @@ public class NoteActivity extends AppCompatActivity {
     private String currentContent;
     private String lastEditTime;
 
-    private int notePositionInList;
+    private int position;
     private static final String LAST_EDIT = "Last edit: ";
 
     @Override
@@ -65,7 +65,7 @@ public class NoteActivity extends AppCompatActivity {
 
         if (intent != null) {
             Note note = intent.getParcelableExtra(EXTRA_NOTE);
-            notePositionInList = intent.getIntExtra(EXTRA_POSITION, 0);
+            position = intent.getIntExtra(EXTRA_POSITION, 0);
 
             currentTitle = note.getTitle();
             currentContent = note.getContent();
@@ -125,11 +125,12 @@ public class NoteActivity extends AppCompatActivity {
         Note resultNote = new Note(title, content, lastEdit);
 
         resultIntent.putExtra(EXTRA_NOTE, resultNote);
-        resultIntent.putExtra(EXTRA_POSITION, notePositionInList);
+        resultIntent.putExtra(EXTRA_POSITION, position);
         setResult(RESULT_OK, resultIntent);
         Toast.makeText(getApplicationContext(), "Note has been saved", Toast.LENGTH_SHORT).show();
-        finish();
-        editTextViews(title, content, lastEdit);
+//        finish();
+
+//        editTextViews(title, content, lastEdit);
     }
 
     private void editTextViews(String title, String content, String lastEdit) {
@@ -147,15 +148,15 @@ public class NoteActivity extends AppCompatActivity {
         titleEditText.getText().clear();
         contentEditText.getText().clear();
 
-        titleView.setText("Untitled");
-        contentView.setText("Content");
+        titleView.setText("Cleared title");
+        contentView.setText("Cleared content");
         lastEditDateView.setText(getDateTime());
-        Toast.makeText(this, "Cleared text fields", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Cleared note", Toast.LENGTH_SHORT).show();
     }
 
     private String getDateTime() {
         Date c = Calendar.getInstance().getTime();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy, HH:mm", Locale.getDefault());
         return sdf.format(c);
     }
 
@@ -171,11 +172,10 @@ public class NoteActivity extends AppCompatActivity {
         }
 
         Note resultNote = new Note(title, content, lastEdit);
-        editTextViews(title, content, lastEdit);
-
+//        editTextViews(title, content, lastEdit);
         Intent resultIntent = new Intent();
         resultIntent.putExtra(EXTRA_NOTE, resultNote);
-        resultIntent.putExtra(EXTRA_POSITION, notePositionInList);
+        resultIntent.putExtra(EXTRA_POSITION, position);
         setResult(RESULT_OK, resultIntent);
         Toast.makeText(NoteActivity.this, "Note has been saved", Toast.LENGTH_SHORT).show();
         finish();

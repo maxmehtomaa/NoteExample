@@ -4,64 +4,63 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.NoteActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".activities.NoteActivity">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/activity_note_title_text_view"
-        tools:text="(Title)"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
         android:textSize="25sp"
-        android:gravity="center"/>
+        tools:text="(Title)" />
 
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/activity_note_content_text_view"
-        tools:text="(Content)"
-        android:textSize="20sp"
-        android:gravity="center"/>
-
-    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="20sp"
+        tools:text="(Content)" />
+
+    <TextView
         android:id="@+id/activity_note_date_text_view"
-        tools:text="(Date)"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
         android:textSize="15sp"
-        android:gravity="center"/>
+        tools:text="(Date)" />
 
 
     <EditText
         android:id="@+id/activity_note_title_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/title"
-        android:maxLines="1"
-        android:inputType="text"
         android:layout_marginTop="10dp"
-        />
+        android:hint="@string/title"
+        android:inputType="text"
+        android:maxLines="1" />
 
     <EditText
         android:id="@+id/activity_note_content_edit_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:hint="@string/content"
         android:gravity="start"
+        android:hint="@string/content"
         android:scrollbars="vertical" />
 
     <!--<Button-->
-        <!--android:id="@+id/activity_note_edit_button"-->
-        <!--android:text="@string/save"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--/>-->
+    <!--android:id="@+id/activity_note_edit_button"-->
+    <!--android:text="@string/save"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--/>-->
 
     <!--<Button-->
-        <!--android:text="@string/clear"-->
-        <!--android:id="@+id/activity_note_clear_button"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content" />-->
+    <!--android:text="@string/clear"-->
+    <!--android:id="@+id/activity_note_clear_button"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content" />-->
 
 </LinearLayout>

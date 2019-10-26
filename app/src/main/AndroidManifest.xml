@@ -11,14 +11,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".activities.NoteActivity"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
-            android:parentActivityName=".activities.NoteListActivity">
-        </activity>
+        <activity
+            android:name=".activities.NoteActivity"
+            android:parentActivityName=".activities.NoteListActivity"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"></activity>
         <activity
             android:name=".activities.NoteListActivity"
-            android:launchMode="singleTop"
             android:label="@string/app_name"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
